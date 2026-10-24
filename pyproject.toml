@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sport-agent"
+version = "0.1.0"
+description = "AI Sport Coach Agent - 基于 LangGraph 的运动前阶段智能体服务"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "Sport Agent Team" }]
+
+dependencies = [
+    # LangGraph 核心流程编排
+    "langgraph>=0.2.0",
+    "langgraph-checkpoint-sqlite>=2.0.0",
+    # LangChain 工具/知识层
+    "langchain>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-openai>=0.2.0",
+    # LangSmith 可观测性
+    "langsmith>=0.1.0",
+    # API 服务
+    "fastapi>=0.115.0",
+    # UploadFile 需要 python-multipart（FastAPI 文件上传依赖）
+    "python-multipart>=0.0.9",
+    "uvicorn[standard]>=0.30.0",
+    # 配置与数据校验
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.4.0",
+    "python-dotenv>=1.0.0",
+    # HTTP 客户端（工具调用外部 API）
+    "httpx>=0.27.0",
+    # 结构化日志
+    "structlog>=24.1.0",
+    # 体检报告 PDF 文本提取
+    "pypdf==6.1.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.6.0",
+    "mypy>=1.11.0",
+]
+postgres = [
+    "langgraph-checkpoint-postgres>=2.0.0",
+    "psycopg[binary]>=3.2.0",
+]
+vector = [
+    "pgvector>=0.3.0",
+    "langchain-postgres>=0.0.12",
+    "psycopg2-binary>=2.9.0",
+]
+memory = [
+    # Mem0 长期记忆（pgvector 后端，复用 postgres_url）
+    "mem0ai>=2.0.0",
+]
+
+[project.scripts]
+sport-agent = "sport_agent.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+sport_agent = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
